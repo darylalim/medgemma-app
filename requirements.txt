@@ -1,0 +1,12 @@
+# Runtime
+accelerate
+Pillow
+python-dotenv
+streamlit
+torch
+transformers
+
+# Dev
+pytest
+ruff
+ty
