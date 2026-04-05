@@ -16,7 +16,7 @@ def load_model():
         model=MODEL_ID,
         model_kwargs={"dtype": torch.bfloat16, "device_map": "auto"},
     )
-    pipe.model.generation_config.pad_token_id = pipe.tokenizer.eos_token_id
+    pipe.model.generation_config.pad_token_id = pipe.tokenizer.eos_token_id  # ty: ignore[unresolved-attribute]
     pipe.model.generation_config.max_length = None
     pipe.model.generation_config.do_sample = False
     return pipe
