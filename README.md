@@ -4,11 +4,13 @@ Streamlit web application for generating responses from medical text and images 
 
 ## Setup
 
+Requires [uv](https://docs.astral.sh/uv/) and a Hugging Face token with access to `google/medgemma-1.5-4b-it`.
+
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
-Requires a Hugging Face token with access to `google/medgemma-1.5-4b-it`. Create a `.env` file:
+Create a `.env` file:
 
 ```
 HF_TOKEN=your_token_here
@@ -17,11 +19,11 @@ HF_TOKEN=your_token_here
 ## Usage
 
 ```bash
-streamlit run streamlit_app.py
+uv run streamlit run streamlit_app.py
 ```
 
 ## Testing
 
 ```bash
-pytest
+uv run pytest
 ```

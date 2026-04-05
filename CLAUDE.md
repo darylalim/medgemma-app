@@ -7,12 +7,12 @@ Streamlit app for medical image and text inference using Google's MedGemma 1.5 4
 ## Commands
 
 ```bash
-streamlit run streamlit_app.py    # Run the app
-pip install -r requirements.txt   # Install dependencies
-ruff check .                      # Lint
-ruff format .                     # Format
-ty check                          # Type check
-pytest                            # Run tests
+uv sync                           # Install dependencies
+uv run streamlit run streamlit_app.py  # Run the app
+uv run ruff check .               # Lint
+uv run ruff format .              # Format
+uv run ty check                   # Type check
+uv run pytest                     # Run tests
 ```
 
 ## Architecture
@@ -33,5 +33,6 @@ Tests in `tests/test_streamlit_app.py` cover the helper functions without Stream
 
 - **No quantization** — bitsandbytes does not support MPS
 - **No multi-turn chat** — single Q&A per interaction
+- **Package management** — uv (`pyproject.toml` + `uv.lock`); no `requirements.txt`
 - **HF token** — loaded from `.env` via `python-dotenv`
 - **Streamlit API** — use `width="stretch"` (not deprecated `use_container_width`); use `GenerationConfig` or model-level config (not loose kwargs to `pipe()`)
