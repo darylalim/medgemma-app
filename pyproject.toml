@@ -5,12 +5,12 @@ description = "Medical image and text inference using MedGemma 1.5 4B"
 readme = "README.md"
 requires-python = "==3.12.*"
 dependencies = [
-    "accelerate",
+    "accelerate>=1.13",
     "pillow",
     "python-dotenv",
-    "streamlit",
-    "torch",
-    "transformers",
+    "streamlit>=1.56",
+    "torch>=2.11",
+    "transformers>=5.5",
 ]
 
 [dependency-groups]
