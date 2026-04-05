@@ -1,5 +1,7 @@
 # MedGemma Streamlit App Implementation Plan
 
+> **Note:** This plan was written before the project migrated from pip/requirements.txt to uv. References to `requirements.txt` and `pip install` are historical.
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** Build a single-file Streamlit app that runs MedGemma 1.5 4B locally on Mac (MPS) for medical image+text and text-only inference.
