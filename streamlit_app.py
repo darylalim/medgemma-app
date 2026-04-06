@@ -56,19 +56,6 @@ def main():
     st.title("MedGemma")
     st.caption("Medical image and text analysis powered by MedGemma 1.5 4B")
 
-    with st.sidebar:
-        st.header("Settings")
-        mode = st.radio("Mode", ["Image + Text", "Text Only"])
-        is_thinking = st.toggle("Enable thinking", value=False)
-        default_instruction = (
-            "You are an expert radiologist."
-            if mode == "Image + Text"
-            else "You are a helpful medical assistant."
-        )
-        system_instruction = st.text_area(
-            "System instruction", value=default_instruction, height=100
-        )
-
     with st.spinner("Loading model..."):
         model, processor, config = load_model()
 
@@ -77,31 +64,36 @@ def main():
     )
 
     uploaded_image = None
-    if mode == "Image + Text":
-        uploaded_file = st.file_uploader(
-            "Upload a medical image", type=["png", "jpg", "jpeg", "webp"]
+    uploaded_file = st.file_uploader(
+        "Upload a medical image (optional)", type=["png", "jpg", "jpeg", "webp"]
+    )
+    if uploaded_file is not None:
+        try:
+            uploaded_image = Image.open(uploaded_file)
+            st.image(uploaded_image, caption="Uploaded image", width="stretch")
+        except Exception:
+            st.error("Failed to load image. Please upload a valid image file.")
+
+    default_instruction = (
+        "You are an expert radiologist."
+        if uploaded_image is not None
+        else "You are a helpful medical assistant."
+    )
+    with st.expander("Settings"):
+        is_thinking = st.toggle("Enable thinking", value=False)
+        system_instruction = st.text_area(
+            "System instruction", value=default_instruction, height=100
         )
-        if uploaded_file is not None:
-            try:
-                uploaded_image = Image.open(uploaded_file)
-                st.image(uploaded_image, caption="Uploaded image", width="stretch")
-            except Exception:
-                st.error("Failed to load image. Please upload a valid image file.")
 
     generate_btn = st.button("Generate", type="primary", disabled=not prompt)
 
     if generate_btn and prompt:
+        has_image = uploaded_image is not None
         full_instruction, max_new_tokens = get_generation_params(
-            mode, is_thinking, system_instruction
+            has_image, is_thinking, system_instruction
         )
-        messages = build_messages(
-            prompt,
-            full_instruction,
-            uploaded_image if mode == "Image + Text" else None,
-        )
-        image_for_model = (
-            [uploaded_image] if mode == "Image + Text" and uploaded_image else None
-        )
+        messages = build_messages(prompt, full_instruction, uploaded_image)
+        image_for_model = [uploaded_image] if uploaded_image else None
         num_images = 1 if image_for_model else 0
         with st.spinner("Generating response..."):
             try:
@@ -129,9 +121,6 @@ def main():
 
         st.markdown("### Response")
         st.markdown(response)
-
-    elif generate_btn and mode == "Image + Text" and uploaded_image is None:
-        st.warning("Please upload an image for Image + Text mode.")
 
 
 if __name__ == "__main__":
