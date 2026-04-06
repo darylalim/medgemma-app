@@ -32,7 +32,7 @@ class TestBuildMessages:
         msgs = build_messages("What is a fracture?", "You are a doctor.", image=None)
         assert len(msgs) == 2
         assert msgs[0]["role"] == "system"
-        assert msgs[0]["content"] == [{"type": "text", "text": "You are a doctor."}]
+        assert msgs[0]["content"] == "You are a doctor."
         assert msgs[1]["role"] == "user"
         assert msgs[1]["content"] == [{"type": "text", "text": "What is a fracture?"}]
 
@@ -40,11 +40,11 @@ class TestBuildMessages:
         img = Image.new("RGB", (10, 10))
         msgs = build_messages("Describe this", "You are a radiologist.", image=img)
         assert len(msgs) == 2
+        assert msgs[0]["content"] == "You are a radiologist."
         user_content = msgs[1]["content"]
         assert len(user_content) == 2
         assert user_content[0] == {"type": "text", "text": "Describe this"}
-        assert user_content[1]["type"] == "image"
-        assert user_content[1]["image"] is img
+        assert user_content[1] == {"type": "image"}
 
 
 class TestGetGenerationParams:
