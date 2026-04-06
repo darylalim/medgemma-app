@@ -1,10 +1,15 @@
 # MedGemma App
 
-Streamlit web application for generating responses from medical text and images using Google's [MedGemma](https://huggingface.co/google/medgemma-1.5-4b-it) model.
+Streamlit app for medical image and text inference using Google's [MedGemma](https://huggingface.co/mlx-community/medgemma-1.5-4b-it-bf16) model in MLX format, running locally on Mac with Apple Silicon.
 
 ## Setup
 
-Requires [uv](https://docs.astral.sh/uv/) and a Hugging Face token with access to `google/medgemma-1.5-4b-it`.
+Requires:
+
+- Mac with Apple Silicon
+- Python 3.12
+- [uv](https://docs.astral.sh/uv/)
+- [Hugging Face](https://huggingface.co/) token with access to [`google/medgemma-1.5-4b-it`](https://huggingface.co/google/medgemma-1.5-4b-it)
 
 ```bash
 uv sync
@@ -22,8 +27,11 @@ HF_TOKEN=your_token_here
 uv run streamlit run streamlit_app.py
 ```
 
-## Testing
+## Development
 
 ```bash
-uv run pytest
+uv run ruff check .               # Lint
+uv run ruff format .              # Format
+uv run ty check                   # Type check
+uv run pytest                     # Run tests
 ```
