@@ -38,14 +38,14 @@ def build_messages(
 
 
 def get_generation_params(
-    mode: str, is_thinking: bool, system_instruction: str
+    has_image: bool, is_thinking: bool, system_instruction: str
 ) -> tuple[str, int]:
     if is_thinking:
         return (
             f"SYSTEM INSTRUCTION: think silently if needed. {system_instruction}",
             1300,
         )
-    max_new_tokens = 300 if mode == "Image + Text" else 500
+    max_new_tokens = 300 if has_image else 500
     return system_instruction, max_new_tokens
 
 

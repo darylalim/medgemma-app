@@ -50,30 +50,30 @@ class TestBuildMessages:
 class TestGetGenerationParams:
     def test_thinking_mode(self):
         instruction, tokens = get_generation_params(
-            "Image + Text", is_thinking=True, system_instruction="Be helpful."
+            has_image=True, is_thinking=True, system_instruction="Be helpful."
         )
         assert (
             instruction == "SYSTEM INSTRUCTION: think silently if needed. Be helpful."
         )
         assert tokens == 1300
 
-    def test_image_text_non_thinking(self):
+    def test_image_non_thinking(self):
         instruction, tokens = get_generation_params(
-            "Image + Text", is_thinking=False, system_instruction="Be helpful."
+            has_image=True, is_thinking=False, system_instruction="Be helpful."
         )
         assert instruction == "Be helpful."
         assert tokens == 300
 
     def test_text_only_non_thinking(self):
         instruction, tokens = get_generation_params(
-            "Text Only", is_thinking=False, system_instruction="Be helpful."
+            has_image=False, is_thinking=False, system_instruction="Be helpful."
         )
         assert instruction == "Be helpful."
         assert tokens == 500
 
-    def test_thinking_text_only_mode(self):
+    def test_thinking_text_only(self):
         instruction, tokens = get_generation_params(
-            "Text Only", is_thinking=True, system_instruction="Be helpful."
+            has_image=False, is_thinking=True, system_instruction="Be helpful."
         )
         assert (
             instruction == "SYSTEM INSTRUCTION: think silently if needed. Be helpful."
