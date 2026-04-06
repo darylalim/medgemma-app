@@ -1,16 +1,14 @@
 [project]
 name = "medgemma-app"
 version = "0.1.0"
-description = "Medical image and text inference using MedGemma 1.5 4B"
+description = "Medical image and text inference using MedGemma 1.5 4B with MLX"
 readme = "README.md"
 requires-python = "==3.12.*"
 dependencies = [
-    "accelerate>=1.13",
+    "mlx-vlm",
     "pillow",
     "python-dotenv",
     "streamlit>=1.56",
-    "torch>=2.11",
-    "transformers>=5.5",
 ]
 
 [dependency-groups]
