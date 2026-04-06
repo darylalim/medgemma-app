@@ -35,9 +35,9 @@ def build_messages(
 ) -> list:
     user_content: list[dict] = [{"type": "text", "text": prompt}]
     if image is not None:
-        user_content.append({"type": "image", "image": image})
+        user_content.append({"type": "image"})
     return [
-        {"role": "system", "content": [{"type": "text", "text": system_instruction}]},
+        {"role": "system", "content": system_instruction},
         {"role": "user", "content": user_content},
     ]
 
