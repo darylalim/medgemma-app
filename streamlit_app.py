@@ -103,12 +103,11 @@ def main():
             [uploaded_image] if mode == "Image + Text" and uploaded_image else None
         )
         num_images = 1 if image_for_model else 0
-        formatted_prompt = apply_chat_template(
-            processor, config, messages, num_images=num_images
-        )
-
         with st.spinner("Generating response..."):
             try:
+                formatted_prompt = apply_chat_template(
+                    processor, config, messages, num_images=num_images
+                )
                 output = generate(
                     model,
                     processor,
