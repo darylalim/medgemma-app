@@ -111,8 +111,8 @@ def main():
                 output = generate(
                     model,
                     processor,
-                    formatted_prompt,
-                    image_for_model,
+                    formatted_prompt,  # ty: ignore[invalid-argument-type]
+                    image_for_model,  # ty: ignore[invalid-argument-type]
                     max_tokens=max_new_tokens,
                     temperature=0.0,
                     verbose=False,
