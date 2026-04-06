@@ -1,25 +1,20 @@
 import streamlit as st
-import torch
 from dotenv import load_dotenv
+from mlx_vlm import generate, load
+from mlx_vlm.prompt_utils import apply_chat_template
+from mlx_vlm.utils import load_config
 from PIL import Image
-from transformers import pipeline
 
 load_dotenv()
 
-MODEL_ID = "google/medgemma-1.5-4b-it"
+MODEL_ID = "mlx-community/medgemma-1.5-4b-it-bf16"
 
 
 @st.cache_resource
 def load_model():
-    pipe = pipeline(
-        "image-text-to-text",
-        model=MODEL_ID,
-        model_kwargs={"dtype": torch.bfloat16, "device_map": "auto"},
-    )
-    pipe.model.generation_config.pad_token_id = pipe.tokenizer.eos_token_id  # ty: ignore[unresolved-attribute]
-    pipe.model.generation_config.max_length = None
-    pipe.model.generation_config.do_sample = False
-    return pipe
+    model, processor = load(MODEL_ID)
+    config = load_config(MODEL_ID)
+    return model, processor, config
 
 
 def parse_response(response: str, is_thinking: bool) -> tuple[str | None, str]:
@@ -75,7 +70,7 @@ def main():
         )
 
     with st.spinner("Loading model..."):
-        pipe = load_model()
+        model, processor, config = load_model()
 
     prompt = st.text_input(
         "Enter your question", placeholder="e.g. Describe this X-ray"
@@ -93,9 +88,9 @@ def main():
             except Exception:
                 st.error("Failed to load image. Please upload a valid image file.")
 
-    generate = st.button("Generate", type="primary", disabled=not prompt)
+    generate_btn = st.button("Generate", type="primary", disabled=not prompt)
 
-    if generate and prompt:
+    if generate_btn and prompt:
         full_instruction, max_new_tokens = get_generation_params(
             mode, is_thinking, system_instruction
         )
@@ -104,11 +99,26 @@ def main():
             full_instruction,
             uploaded_image if mode == "Image + Text" else None,
         )
+        image_for_model = (
+            [uploaded_image] if mode == "Image + Text" and uploaded_image else None
+        )
+        num_images = 1 if image_for_model else 0
+        formatted_prompt = apply_chat_template(
+            processor, config, messages, num_images=num_images
+        )
 
         with st.spinner("Generating response..."):
             try:
-                output = pipe(text=messages, max_new_tokens=max_new_tokens)
-                response = output[0]["generated_text"][-1]["content"]
+                output = generate(
+                    model,
+                    processor,
+                    formatted_prompt,
+                    image_for_model,
+                    max_tokens=max_new_tokens,
+                    temperature=0.0,
+                    verbose=False,
+                )
+                response = output.text
             except Exception as e:
                 st.error(f"Inference failed: {e}")
                 return
@@ -121,7 +131,7 @@ def main():
         st.markdown("### Response")
         st.markdown(response)
 
-    elif generate and mode == "Image + Text" and uploaded_image is None:
+    elif generate_btn and mode == "Image + Text" and uploaded_image is None:
         st.warning("Please upload an image for Image + Text mode.")
 
 
