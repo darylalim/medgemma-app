@@ -2,6 +2,13 @@
 
 Streamlit app for medical image and text inference using Google's [MedGemma](https://huggingface.co/mlx-community/medgemma-1.5-4b-it-bf16) model in MLX format, running locally on Mac with Apple Silicon.
 
+## Features
+
+- Single-column UI with text input and optional image upload
+- Collapsible settings for thinking trace and system instruction
+- System instruction auto-adjusts based on whether an image is attached
+- Fully local inference on Apple Silicon via MLX
+
 ## Setup
 
 Requires:
